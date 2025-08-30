@@ -139,6 +139,7 @@ public class RidesService {
                     return new UserSessionResponse(true, "", "", "");
                 }
             } catch (Exception e) {
+                log.error(e.getMessage());
                 throw new OpenApiResourceNotFoundException("Failed to register ride");
             }
         } else {

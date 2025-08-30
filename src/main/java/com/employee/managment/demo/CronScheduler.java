@@ -10,7 +10,7 @@ public class CronScheduler {
     @Autowired
     CronService cronService;
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void executeCron() throws Exception{
         cronService.testScheduler();
     }

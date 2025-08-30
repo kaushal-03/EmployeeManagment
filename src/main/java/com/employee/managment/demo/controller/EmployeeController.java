@@ -7,16 +7,23 @@ import com.employee.managment.demo.enums.Designation;
 import com.employee.managment.demo.service.EmployeeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RestController
@@ -85,5 +92,13 @@ public class EmployeeController {
         //response.put("employeeId", updated.getEmployeeId());
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping(value = "process-excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+        public CompletableFuture<ResponseEntity<List<String>>> processExcelFile(@RequestBody MultipartFile file) throws IOException {
+
+        return employeeService.processExcelFile(file)
+                .thenApply(results -> ResponseEntity.ok(results));
+    }
+
 }
 

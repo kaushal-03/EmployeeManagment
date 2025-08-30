@@ -30,7 +30,7 @@ public class MEmployeeController {
     Jedis redisClient;
 
     @PostMapping("/insertEmployee")
-    ResponseEntity<Map>saveEmployee(@RequestBody MEmployeeDTO employee){
+    ResponseEntity<Map> saveEmployee(@RequestBody MEmployeeDTO employee) {
 
         String id = "EMP_" + java.time.LocalDateTime.now()
                 .format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -50,7 +50,7 @@ public class MEmployeeController {
     }
 
     @GetMapping("/fetchNearByRides")
-    ResponseEntity<Map>fetchEmployees(@RequestParam double distance, @RequestParam double x, @RequestParam double y){
+    ResponseEntity<Map> fetchEmployees(@RequestParam double distance, @RequestParam double x, @RequestParam double y) {
         Map<String, Object> response = new HashMap<>();
         FetchDTO dto = new FetchDTO();
         dto.setDistance(distance);
@@ -68,7 +68,7 @@ public class MEmployeeController {
     }
 
     @GetMapping("fetchByMetro")
-    ResponseEntity<Map>fetchByMetro(@RequestParam List<String>stations){
+    ResponseEntity<Map> fetchByMetro(@RequestParam List<String> stations) {
         Map<String, Object> response = new HashMap<>();
         List<MEmployeeEntity> data = mEmployeeService.findByMetroStations(stations);
         response.put("statusCode", HttpStatus.OK.value());
@@ -77,22 +77,34 @@ public class MEmployeeController {
     }
 
     @GetMapping("/create-session")
-    ResponseEntity<Map>sessionCreation(){
+    ResponseEntity<Map> sessionCreation() {
         Map<String, Object> response = new HashMap<>();
-        try{
+        try {
             UUID uuid = UUID.randomUUID();
             redisClient.setex(uuid.toString(), 60, "ACTIVE");
             response.put("statusCode", HttpStatus.OK.value());
             response.put("sessionId", uuid.toString());
             response.put("message", "Session created successfully");
-            return ResponseEntity.ok(response);}
-        catch(Exception e){
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("error", "Failed to create session");
             response.put("details", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-}
 
+    @GetMapping("/eventbriteoauth")
+    void eventbriteOauth(@RequestParam Map<String, String> params) {
+        params.forEach((key, value) -> {
+            System.out.println(key + " = " + value);
+        });
+    }
+
+    @PostMapping("/eventbrite-registration")
+    public void registerEvent(@RequestBody Map<String, Object> body) {
+        System.out.println("Body as map: " + body);
+    }
+
+}
 

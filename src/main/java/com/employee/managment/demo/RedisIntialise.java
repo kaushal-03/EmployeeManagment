@@ -11,6 +11,7 @@ import redis.clients.jedis.Jedis;
 public class RedisIntialise {
 
     private final RedisPubSub pubSub;
+
     @Autowired
     Jedis redisClient;
 
